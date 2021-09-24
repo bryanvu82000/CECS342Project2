@@ -85,11 +85,20 @@ void* my_alloc(int size) {
 
     //if head node
   if (chosen_block == free_head){
-    //deciding if we can split head
+    //if we can split
+    if (chosen_block->block_size >= OVERHEAD_SIZE){
+      //create new block to go in between chozen block and next block
+      struct Block *new_block = (struct Block*)((char*)chosen_block->next_block + size);
+      //make the size of the new block the remainder of the chozen_block after size
+      new_block->block_size = chosen_block->block_size - size;
+      //make the new block point the block that the chosen_block is currently pointed to
+      new_block->next_block = chosen_block->next_block;
+      //manipulate chosen_block size and next_block to point to the new block 
+      chosen_block->block_size = size;
+      chosen_block->next_block = new_block;
+    }
+  } else { //head node but not splitting, but instead creating new block for size
     
-  } else {
-    //section for not head 
-
   }
     // Branch 1: we are not splitting the head node.
     // if (....) 
